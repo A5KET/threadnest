@@ -62,19 +62,19 @@ header {
 
     &>.like,
     &>.dislike {
-        width: 1em;
-        height: 1em;
+        width: 0.9em;
+        height: 0.9em;
         stroke-width: 0.25em;
         color: #B1B5BF;
         transition: transform 0.3s ease;
     }
 
-    &>.like:hover {
+    &>.like:hover, &>.like.active {
         transform: translateY(-3px);
         stroke: #4CAF50;
     }
 
-    &>.dislike:hover {
+    &>.dislike:hover, &>.dislike.active {
         transform: translateY(3px);
         stroke: #F44336;
     }
