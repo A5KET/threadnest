@@ -1,0 +1,81 @@
+:root {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: 0.8em;
+}
+
+header {
+    font-size: 3em;
+    font-weight: 600;
+}
+
+.message {
+    &>.header {
+        display: flex;
+        justify-content: center;
+        gap: 1em;
+        background: #F5F7FA;
+        padding: 5px;
+        margin-top: 2em;
+
+        &>.username {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        &>.message-rating {
+            margin-left: auto;
+        }
+    }
+
+    &>.text {
+        font-size: 1.2em;
+        margin-top: 1em;
+    }
+
+    &>.message {
+        padding-left: 20px;
+    }
+
+    &:not(&>.message) {
+        padding-right: 10px;
+    }
+
+    &+.message {
+        margin-top: 3em;
+    }
+}
+
+.message-rating {
+    display: flex;
+    font-size: 1.3em;
+    color: #768089;
+
+    &>.rating {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: 1.7em;
+    }
+
+    &>.like,
+    &>.dislike {
+        width: 1em;
+        height: 1em;
+        stroke-width: 0.25em;
+        color: #B1B5BF;
+        transition: transform 0.3s ease;
+    }
+
+    &>.like:hover {
+        transform: translateY(-3px);
+        stroke: #4CAF50;
+    }
+
+    &>.dislike:hover {
+        transform: translateY(3px);
+        stroke: #F44336;
+    }
+}
