@@ -30,7 +30,7 @@ function App({ messageService }: AppProps) {
     })
   }
 
-  const messageTreeRoots = useMessageTree(messages)
+  const messageTreeRoots = useMessageTree(messages, (a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
   return (
     <>

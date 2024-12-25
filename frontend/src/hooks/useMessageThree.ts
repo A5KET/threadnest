@@ -2,8 +2,7 @@ import { useMemo } from 'react'
 import { Message, MessageNode } from '../types'
 
 
-
-export default function useMessageTree(messages: Message[]) {
+export default function useMessageTree(messages: Message[], compareFn: (a: Message, b: Message) => number) {
     return useMemo(() => {
         const messageMap = new Map<number, MessageNode>()
         const roots: MessageNode[] = []
@@ -26,6 +25,18 @@ export default function useMessageTree(messages: Message[]) {
                 }
             }
         }
+
+        const sortMessageTree = (nodes: MessageNode[]) => {
+            nodes.sort(compareFn)
+
+            nodes.forEach((node) => {
+                if (node.children.length > 0) {
+                    sortMessageTree(node.children)
+                }
+            })
+        }
+
+        sortMessageTree(roots)
 
         return roots
     }, [messages])
