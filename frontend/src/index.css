@@ -11,6 +11,11 @@ header {
     font-weight: 600;
 }
 
+main {
+    margin: 0 auto;
+    max-width: 756px;
+}
+
 .message {
     padding-left: 5px;
     border-left: rgb(191, 191, 191) solid 2px;
@@ -73,13 +78,40 @@ header {
         transition: transform 0.3s ease;
     }
 
-    &>.like:hover, &>.like.active {
+    &>.like:hover,
+    &>.like.active {
         transform: translateY(-3px);
         stroke: #4CAF50;
     }
 
-    &>.dislike:hover, &>.dislike.active {
+    &>.dislike:hover,
+    &>.dislike.active {
         transform: translateY(3px);
         stroke: #F44336;
+    }
+}
+
+.invisible {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+
+.message-form {
+    max-width: 756px;
+}
+
+.message-form-field {
+    &>input, &>textarea {
+        width: 100%;
+    }
+
+    &>text {
+
     }
 }

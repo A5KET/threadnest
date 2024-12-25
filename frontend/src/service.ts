@@ -161,7 +161,7 @@ export class InMemoryMessageService implements MessageService {
     }
 
     async createMessage(newMessage: NewMessage): Promise<Message> {
-        const newId = this.messages.map(message => message.id).reduce((prev, cur) => Math.max(prev, cur))
+        const newId = this.messages.map(message => message.id).reduce((prev, cur) => Math.max(prev, cur)) + 1
 
         const author: User = {
             username: newMessage.username
@@ -176,7 +176,7 @@ export class InMemoryMessageService implements MessageService {
             createdAt: new Date()
         }
 
-        this.messages.push(message)
+        this.messages = [message, ...this.messages]
 
         return message
     }

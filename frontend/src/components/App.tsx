@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import useMessageTree from '../hooks/useMessageThree'
 import { Message, MessageReaction, MessageService, NewMessage } from '../types'
 import ThreadMessage from './Message'
+import MessageForm from './MessageForm'
 
 export interface AppProps {
   messageService: MessageService
@@ -38,6 +39,7 @@ function App({ messageService }: AppProps) {
         Threadnest
       </header>
       <main>
+        <MessageForm onSubmit={handleNewMessage} />
         {messageTreeRoots.map(message => <ThreadMessage key={message.id} message={message} onReaction={handleMessageNewReaction} />)}
       </main>
       <footer>
