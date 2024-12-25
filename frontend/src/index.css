@@ -23,7 +23,6 @@ main {
 
     &>.header {
         display: flex;
-        justify-content: center;
         gap: 1em;
         background: #F5F7FA;
         padding: 5px;
