@@ -1,12 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './components/App.tsx'
-import { InMemoryMessageService } from './service.ts'
+import { APIMessageService } from './service.ts'
 
 import './index.css'
 
 
-const messageService = new InMemoryMessageService()
+const messageService = new APIMessageService()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

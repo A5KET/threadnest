@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import useMessageTree from '../hooks/useMessageThree'
 import { Message, MessageService, NewMessage } from '../types'
 import ThreadMessage from './Message'
-import MessageForm from './MessageForm'
+import MessageForm, { MessageFormData } from './MessageForm'
 
 export interface AppProps {
   messageService: MessageService
@@ -10,18 +9,26 @@ export interface AppProps {
 
 function App({ messageService }: AppProps) {
   const [messages, setMessages] = useState<Message[]>([])
+  console.log(messages)
 
   useEffect(() => {
     messageService.getMessages().then(setMessages)
   }, [messageService])
 
-  const handleNewMessage = (newMessage: NewMessage) => {
+  const handleNewMessage = (data: MessageFormData) => {
+    const newMessage: NewMessage = {
+      text: data.text,
+      author: {
+        username: data.username,
+        email: data.email,
+        homepage: data.homepage.length > 0 ? data.homepage : undefined
+      }
+    }
+
     messageService.createMessage(newMessage).then(message => {
       setMessages([message, ...messages])
     })
   }
-
-  const messageTreeRoots = useMessageTree(messages, (a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
   return (
     <>
@@ -30,7 +37,7 @@ function App({ messageService }: AppProps) {
       </header>
       <main>
         <MessageForm onSubmit={handleNewMessage} />
-        {messageTreeRoots.map(message => <ThreadMessage key={message.id} message={message} />)}
+        {messages.map(message => <ThreadMessage key={message.id} message={message} />)}
       </main>
       <footer>
 

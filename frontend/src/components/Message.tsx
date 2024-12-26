@@ -1,9 +1,9 @@
-import { MessageNode } from '../types'
+import { Message } from '../types'
 import { formatDate } from '../utils'
 
 
 export interface ThreadMessageProps {
-    message: MessageNode,
+    message: Message,
 }
 
 export default function ThreadMessage({ message }: ThreadMessageProps) {
@@ -16,7 +16,11 @@ export default function ThreadMessage({ message }: ThreadMessageProps) {
                 <span className='date'>{`${date} в ${time}`}</span>
             </div>
             <div className='text'>{message.text}</div>
-            {message.children.map(childMessage => <ThreadMessage key={childMessage.id} message={childMessage} />)}
+            {
+                message.children
+                    ? message.children.map(childMessage => <ThreadMessage key={childMessage.id} message={childMessage} />)
+                    : null
+            }
         </div>
     )
 }

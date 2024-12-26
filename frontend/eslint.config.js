@@ -1,5 +1,5 @@
 import js from '@eslint/js'
-import stylisticJs from '@stylistic/eslint-plugin-js'
+import stylistic from '@stylistic/eslint-plugin'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import globals from 'globals'
@@ -19,7 +19,7 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      '@stylistic/js': stylisticJs
+      '@stylistic': stylistic
     },
     rules: {
       ...reactHooks.configs.recommended.rules,

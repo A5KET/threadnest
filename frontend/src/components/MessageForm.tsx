@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, KeyboardEvent, useRef, useState } from 'react'
 import { NewMessage } from '../types'
 
 export interface MessageFormProps {
-    onSubmit: (data: NewMessage) => void
+    onSubmit: (data: MessageFormData) => void
 }
 
 
@@ -15,6 +15,12 @@ interface FormElementProps {
     required?: boolean
 }
 
+export interface MessageFormData {
+    username: string
+    email: string
+    homepage: string
+    text: string
+}
 
 interface FormInputProps extends FormElementProps {
     type: 'text' | 'email' | 'url'
@@ -72,7 +78,7 @@ function FormTextArea({ label, name, value, required = true, onChange, onSubmit 
 
 
 export default function MessageForm({ onSubmit }: MessageFormProps) {
-    const [formData, setFormData] = useState<Required<NewMessage>>({
+    const [formData, setFormData] = useState<Required<MessageFormData>>({
         username: '',
         email: '',
         homepage: '',
