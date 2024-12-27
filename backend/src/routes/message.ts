@@ -34,16 +34,16 @@ router.post('/', validateBody(messageSchema), async (req: Request<{}, ResponseBo
     })
 })
 
-router.get('/:messageId/children', async (req: Request<{ messageId: number}, ResponseBody<Message[]>>, res) => {
-    const { messageId } = req.params
+router.get('/:messageId/children', async (req: Request<{ messageId: string }, ResponseBody<Message[]>>, res) => {
+    const messageId = Number(req.params.messageId)
     
     const messages = await fetchMessagesByParentId(messageId, MESSAGES_DEPTH)
 
     res.send({ data: messages })
 })
 
-router.post('/:messageId/children', validateBody(messageSchema), async (req: Request<{ messageId: number }, ResponseBody<Message>, NewMessage>, res: Response) => {
-    const { messageId } = req.params
+router.post('/:messageId/children', validateBody(messageSchema), async (req: Request<{ messageId: string }, ResponseBody<Message>, NewMessage>, res: Response) => {
+    const messageId = Number(req.params.messageId)
     const isParentExists = await checkMessageExists(messageId)
 
     if (!isParentExists) {

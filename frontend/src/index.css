@@ -54,39 +54,9 @@ main {
     &+.message {
         margin-top: 3em;
     }
-}
 
-.message-rating {
-    display: flex;
-    font-size: 1.3em;
-    color: #768089;
-
-    &>.rating {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-width: 1.7em;
-    }
-
-    &>.like,
-    &>.dislike {
-        width: 0.9em;
-        height: 0.9em;
-        stroke-width: 0.25em;
-        color: #B1B5BF;
-        transition: transform 0.3s ease;
-    }
-
-    &>.like:hover,
-    &>.like.active {
-        transform: translateY(-3px);
-        stroke: #4CAF50;
-    }
-
-    &>.dislike:hover,
-    &>.dislike.active {
-        transform: translateY(3px);
-        stroke: #F44336;
+    &>.message-form {
+        margin-top: 2em;
     }
 }
 

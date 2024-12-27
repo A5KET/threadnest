@@ -33,7 +33,7 @@ function createRecursiveMessageInclude(depth: number) {
         }
     }
 
-    for (let i = 0; i < depth - 1; i++) {
+    for (let i = 0; i < depth; i++) {
         includeObject = {
             include: {
                 author: true,
@@ -72,7 +72,7 @@ export async function fetchMessagesByParentId(parentId: number | null, maxDepth:
         include: includeObject
     })
 
-    return setHasChildrenAndCleanUp(messages as MessageWithChildren[], 0, maxDepth)
+    return setHasChildrenAndCleanUp(messages as MessageWithChildren[], 1, maxDepth)
 }
 
 export async function fetchMessageById(messageId: number, maxDepth: number) {
@@ -109,7 +109,6 @@ export async function createMessage(message: Prisma.MessageUncheckedCreateInput)
 
     return {
         ...res,
-        children: [],
         hasChildren: false
     }
 }
@@ -130,9 +129,9 @@ export async function createAuthor(author: Prisma.AuthorUncheckedCreateInput) {
 
 
 export async function createMessageWithAuthor(message: Omit<Prisma.MessageUncheckedCreateInput, 'authorId'> & { author: NewAuthor}) {
-    console.log(message)
     const author = await createAuthor(message.author)
     return await createMessage({
+        parentId: message.parentId,
         authorId: author.id,
         text: message.text,
         createdAt: new Date()

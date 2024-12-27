@@ -6,4 +6,5 @@ export type { Message, User, NewMessage }
 export interface MessageService {
     getMessages(): Promise<Message[]>
     createMessage(message: NewMessage): Promise<Message>
+    createReplyMessage(parentMessage: Message, replyMessage: NewMessage): Promise<Message>
 }

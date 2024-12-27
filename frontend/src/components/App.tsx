@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Message, MessageService, NewMessage } from '../types'
+import { useMessages } from '../hooks/useMessages'
+import { MessageService } from '../types'
+import { createMessageFromFormData } from '../utils'
 import ThreadMessage from './Message'
 import MessageForm, { MessageFormData } from './MessageForm'
 
@@ -8,26 +9,12 @@ export interface AppProps {
 }
 
 function App({ messageService }: AppProps) {
-  const [messages, setMessages] = useState<Message[]>([])
-  console.log(messages)
-
-  useEffect(() => {
-    messageService.getMessages().then(setMessages)
-  }, [messageService])
+  const { messages, addHeadlineMessage, addReplyMessage } = useMessages(messageService)
 
   const handleNewMessage = (data: MessageFormData) => {
-    const newMessage: NewMessage = {
-      text: data.text,
-      author: {
-        username: data.username,
-        email: data.email,
-        homepage: data.homepage.length > 0 ? data.homepage : undefined
-      }
-    }
+    const message = createMessageFromFormData(data)
 
-    messageService.createMessage(newMessage).then(message => {
-      setMessages([message, ...messages])
-    })
+    addHeadlineMessage(message)
   }
 
   return (
@@ -37,7 +24,7 @@ function App({ messageService }: AppProps) {
       </header>
       <main>
         <MessageForm onSubmit={handleNewMessage} />
-        {messages.map(message => <ThreadMessage key={message.id} message={message} />)}
+        {messages.map(message => <ThreadMessage key={message.id} message={message} onReply={addReplyMessage} />)}
       </main>
       <footer>
 

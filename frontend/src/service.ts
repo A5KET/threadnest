@@ -26,4 +26,10 @@ export class APIMessageService implements MessageService {
 
         return res.data.data
     }
+
+    async createReplyMessage(parentMessage: Message, replyMessage: NewMessage) {
+        const res = await api.post<ApiResponse<Message>>(`/messages/${parentMessage.id}/children`, replyMessage)
+
+        return res.data.data
+    }
 }
