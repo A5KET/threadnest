@@ -18,12 +18,23 @@ model Author {
 }
 
 model Message {
-  id        Int       @id @default(autoincrement())
-  author    Author    @relation(fields: [authorId], references: [id])
-  parent    Message?  @relation("MessageParent", fields: [parentId], references: [id])
-  children  Message[] @relation("MessageParent")
-  text      String
-  parentId  Int?
-  authorId  Int       @unique
-  createdAt DateTime  @default(now())
+  id          Int          @id @default(autoincrement())
+  author      Author       @relation(fields: [authorId], references: [id])
+  parent      Message?     @relation("MessageParent", fields: [parentId], references: [id])
+  children    Message[]    @relation("MessageParent")
+  attachments Attachment[]
+  text        String
+  parentId    Int?
+  authorId    Int          @unique
+  createdAt   DateTime     @default(now())
+}
+
+model Attachment {
+  id        Int      @id @default(autoincrement())
+  name      String
+  mimetype  String
+  path      String   @unique
+  createdAt DateTime @default(now())
+  Message   Message? @relation(fields: [messageId], references: [id])
+  messageId Int?
 }

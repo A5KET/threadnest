@@ -1,15 +1,22 @@
-import express from 'express'
 import cors from 'cors'
+import express from 'express'
 
-import messageRoutes from './routes/message'
+import { handleError } from './middleware'
+import getMessagesRoutes from './routes/messages'
+import { StaticService, Upload } from './types'
 
 
-export function createServer() {
+export function createServer(
+    attachmentUpload: Upload,
+    staticService: StaticService
+) {
     const server = express()
 
+    server.use('/static', express.static(staticService.staticRoot))
     server.use(express.json())
     server.use(cors())
-    server.use('/messages', messageRoutes)
+    server.use('/messages', getMessagesRoutes(attachmentUpload, staticService), handleError)
+    server.use(handleError)
 
     return server
 }

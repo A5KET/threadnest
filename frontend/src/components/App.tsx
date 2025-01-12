@@ -3,7 +3,7 @@ import { useMessages } from '../hooks/useMessages'
 import { MessageService } from '../types'
 import { createMessageFromFormData } from '../utils'
 import ThreadMessage from './Message'
-import MessageForm, { MessageFormData } from './MessageForm'
+import MessageForm, { MessageFormData } from './form/Form'
 
 export interface AppProps {
   messageService: MessageService

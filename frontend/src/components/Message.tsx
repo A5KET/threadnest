@@ -1,9 +1,10 @@
-import { useState } from 'react'
 import { Reply } from 'lucide-react'
+import { useState } from 'react'
 
 import { Message, NewMessage } from '../types'
 import { createMessageFromFormData, formatDate } from '../utils'
-import MessageForm, { MessageFormData } from './MessageForm'
+import AttachmentCard from './attachment/AttachmentCard'
+import MessageForm, { MessageFormData } from './form/Form'
 
 
 export interface ThreadMessageProps {
@@ -12,7 +13,7 @@ export interface ThreadMessageProps {
 }
 
 export default function ThreadMessage({ message, onReply }: ThreadMessageProps) {
-    const [ isReply, setIsReply ] = useState<boolean>(false)
+    const [isReply, setIsReply] = useState<boolean>(false)
     const { date, time } = formatDate(message.createdAt)
 
     const handleReplyClick = () => {
@@ -39,17 +40,34 @@ export default function ThreadMessage({ message, onReply }: ThreadMessageProps) 
             </div>
             <div className='text'>{message.text}</div>
             {
-                isReply 
+                message.attachments
+                    ? (
+                        <div className='attachments'>
+                            {message.attachments.map(
+                                attachment =>
+                                    <AttachmentCard
+                                        key={attachment.id}
+                                        name={attachment.name}
+                                        mimetype={attachment.mimetype}
+                                    />
+                            )}
+                        </div>
+                    )
+                    : null
+            }
+
+            {
+                isReply
                     ? <MessageForm onSubmit={handleReplySubmit} onCancel={handleFormCancel} />
                     : null
             }
             {
                 message.children
                     ? message.children.map(childMessage => {
-                        return <ThreadMessage key={childMessage.id} message={childMessage} onReply={onReply}/>
+                        return <ThreadMessage key={childMessage.id} message={childMessage} onReply={onReply} />
                     })
                     : (
-                        message.hasChildren 
+                        message.hasChildren
                             ? <p>Show more</p>
                             : null
                     )
