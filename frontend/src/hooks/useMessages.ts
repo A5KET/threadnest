@@ -1,18 +1,25 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { Message, MessageService, NewMessage } from '../types'
+import useErrorContext from './useErrorContext'
 
 
 export function useMessages(messageService: MessageService) {
     const [rootMessages, setRootMessages] = useState<Message[]>([])
     const [rootMessageLookup, setRootMessageLookup] = useState<Record<number, number>>({})
+    const { setError } = useErrorContext()
 
     useEffect(() => {
-        messageService.getMessages().then(setRootMessages)
+        messageService.getMessages()
+            .then(setRootMessages)
+            .catch(error => {
+                console.error(error)
+                setError('Connection error')
+            })
     }, [])
 
     useEffect(() => {
-        const lookupIds: Record<number, number> = { }
+        const lookupIds: Record<number, number> = {}
 
         const lookup = (parentId: number, child: Message) => {
             lookupIds[child.id] = parentId
@@ -57,8 +64,8 @@ export function useMessages(messageService: MessageService) {
                     children: parentMessage.children ? [message, ...parentMessage.children] : [message],
                     hasChildren: true
                 }
-                
-                const rootMessageId = rootMessageLookup[parentMessage.id] 
+
+                const rootMessageId = rootMessageLookup[parentMessage.id]
                 const rootMessage = rootMessages.find(cur => cur.id === rootMessageId)
 
                 if (!rootMessage) {
