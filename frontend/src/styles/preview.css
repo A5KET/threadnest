@@ -1,0 +1,26 @@
+.preview-footer {
+    display: flex;
+    margin-top: 15px;
+
+    & .close-button {
+        stroke: white;
+
+        &:hover {
+            stroke: grey;
+        }
+    }
+}
+
+.preview-metadata {
+    color: white;
+    margin-right: 50px;
+    font-weight: 700;
+
+    & .name {
+        font-size: 1.2em;
+    }
+
+    & .date {
+        color: rgb(152, 152, 152);
+    }
+}

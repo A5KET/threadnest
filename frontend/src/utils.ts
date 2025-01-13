@@ -1,5 +1,3 @@
-import { AttachmentType } from 'common/attachments'
-import { mimeTypeToAttachmentMetadata } from 'common/attachments'
 import { MessageFormData } from './components/form/Form'
 import { NewMessage } from './types'
 
@@ -28,4 +26,8 @@ export function areFilesEqual(first: File, second: File) {
         first.size === second.size &&
         first.lastModified === second.lastModified
     )
+}
+
+export function getFullStaticPath(path: string) {
+    return `/static/${path}`
 }

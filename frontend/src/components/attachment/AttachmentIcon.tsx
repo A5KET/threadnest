@@ -1,4 +1,4 @@
-import { getFileTypeFromMime } from 'common/attachments'
+import { getAttachmentTypeFromMime } from 'common/attachments'
 import { File, FileImage, FileText, LucideProps } from 'lucide-react'
 
 
@@ -8,7 +8,7 @@ export interface AttachmentIconProps extends LucideProps {
 
 
 function useAttachmentIcon(mimetype: string) {
-    switch (getFileTypeFromMime(mimetype)) {
+    switch (getAttachmentTypeFromMime(mimetype)) {
         case 'image':
             return FileImage
         case 'text':

@@ -14,6 +14,6 @@ export const mimeTypeToAttachmentMetadata: Record<string, FileMetadata | undefin
 export const allowedAttachmentFileExtensions = Object.values(mimeTypeToAttachmentMetadata).map(metadata => metadata!.extensions).flat()
 export const allowedAttachmentFileMimeTypes = Object.keys(mimeTypeToAttachmentMetadata)
 
-export function getFileTypeFromMime(mimetype: string): AttachmentType {
+export function getAttachmentTypeFromMime(mimetype: string): AttachmentType {
     return mimeTypeToAttachmentMetadata[mimetype as keyof typeof mimeTypeToAttachmentMetadata]?.type || 'default'
 }

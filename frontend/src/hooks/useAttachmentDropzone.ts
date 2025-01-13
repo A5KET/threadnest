@@ -1,4 +1,4 @@
-import { getFileTypeFromMime } from 'common/attachments'
+import { getAttachmentTypeFromMime } from 'common/attachments'
 import { maxAttachmentImageHeight, maxAttachmentImageWidth, maxAttachmentSize, mimeToAcceptedAttachmentFileExtension } from 'common/constraints'
 import { ErrorCode, FileRejection, useDropzone } from 'react-dropzone'
 
@@ -13,7 +13,7 @@ function validateAttachmentFile(file: File) {
                 return
             }
 
-            if (getFileTypeFromMime(file.type) === 'image') {
+            if (getAttachmentTypeFromMime(file.type) === 'image') {
                 const img = new Image()
 
                 img.onload = () => {

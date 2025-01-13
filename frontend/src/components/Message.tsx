@@ -1,6 +1,7 @@
 import { Reply } from 'lucide-react'
 import { useState } from 'react'
 
+import { Attachment } from 'common/types'
 import { Message, NewMessage } from '../types'
 import { createMessageFromFormData, formatDate } from '../utils'
 import AttachmentCard from './attachment/AttachmentCard'
@@ -10,9 +11,10 @@ import MessageForm, { MessageFormData } from './form/Form'
 export interface ThreadMessageProps {
     message: Message
     onReply: (parentMessage: Message, replyMessage: NewMessage) => void
+    onAttachmentClick: (attachment: Attachment) => void
 }
 
-export default function ThreadMessage({ message, onReply }: ThreadMessageProps) {
+export default function ThreadMessage({ message, onReply, onAttachmentClick }: ThreadMessageProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
     const { date, time } = formatDate(message.createdAt)
 
@@ -49,6 +51,7 @@ export default function ThreadMessage({ message, onReply }: ThreadMessageProps) 
                                         key={attachment.id}
                                         name={attachment.name}
                                         mimetype={attachment.mimetype}
+                                        onClick={() => onAttachmentClick(attachment)}
                                     />
                             )}
                         </div>
@@ -64,7 +67,12 @@ export default function ThreadMessage({ message, onReply }: ThreadMessageProps) 
             {
                 message.children
                     ? message.children.map(childMessage => {
-                        return <ThreadMessage key={childMessage.id} message={childMessage} onReply={onReply} />
+                        return <ThreadMessage
+                            key={childMessage.id}
+                            message={childMessage}
+                            onReply={onReply}
+                            onAttachmentClick={onAttachmentClick}
+                        />
                     })
                     : (
                         message.hasChildren
