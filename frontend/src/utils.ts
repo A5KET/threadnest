@@ -27,7 +27,3 @@ export function areFilesEqual(first: File, second: File) {
         first.lastModified === second.lastModified
     )
 }
-
-export function getFullStaticPath(path: string) {
-    return `/static/${path}`
-}

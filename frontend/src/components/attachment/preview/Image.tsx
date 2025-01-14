@@ -1,15 +1,12 @@
-import { Attachment } from 'common/types'
-import { getFullStaticPath } from '../../../utils'
-
 export interface ImageAttachmentPreviewProps {
-    attachment: Attachment
+    path: string
 }
 
 
-export default function ImageAttachmentPreview({ attachment }: ImageAttachmentPreviewProps) {
+export default function ImageAttachmentPreview({ path }: ImageAttachmentPreviewProps) {
     return (
         <div className='preview-image'>
-            <img src={getFullStaticPath(attachment.path)} />
+            <img src={path} />
         </div>
     )
 }

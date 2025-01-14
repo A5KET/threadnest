@@ -1,10 +1,11 @@
 import { Attachment } from 'common/types'
 import Lightbox from './Lightbox'
 
-import { X } from 'lucide-react'
+import { Download, X } from 'lucide-react'
 import '../../../styles/preview.css'
 import { AttachmentType } from 'common/attachments'
 import AttachmentPreview from './Preview'
+import useStaticContext from '../../../hooks/useStaticContext'
 
 
 export interface AttachmentPreviewViewerProps {
@@ -15,7 +16,7 @@ export interface AttachmentPreviewViewerProps {
 
 
 export default function AttachmentPreviewViewer({ attachment, attachmentType, onPreviewClose }: AttachmentPreviewViewerProps) {
-
+    const { getStaticPath } = useStaticContext()
 
     return (
         <Lightbox onClose={onPreviewClose}>
@@ -25,6 +26,7 @@ export default function AttachmentPreviewViewer({ attachment, attachmentType, on
                     <div className='name'>{attachment.name}</div>
                     <div className='date'>{attachment.createdAt.toLocaleString('en-GB', { minute: '2-digit', second: '2-digit' })}</div>
                 </div>
+                <a href={getStaticPath(attachment.path)} download={attachment.name}><Download /></a>
                 <X className='close-button' size={40} onClick={onPreviewClose} />
             </div>
         </Lightbox>

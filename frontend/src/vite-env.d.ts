@@ -1,9 +1,10 @@
 /// <reference types="vite/client" />
 
-interface ImportMetaEnv {
-        VITE_BACKEND_URL: string
-  }
-  
-  interface ImportMeta {
+export interface ImportMetaEnv {
+    VITE_BACKEND_URL: string
+    VITE_STATIC_URL: string
+}
+
+interface ImportMeta {
     readonly env: ImportMetaEnv
-  }
+}
