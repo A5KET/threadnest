@@ -19,7 +19,8 @@ function getEnv<K extends keyof ImportMetaEnv>(key: K): ImportMetaEnv[K] {
 }
 
 
-const messageService = new APIMessageService()
+const messageService = new APIMessageService(getEnv('VITE_BACKEND_URL'))
+
 const staticPath = getEnv('VITE_STATIC_URL')
 
 createRoot(document.getElementById('root')!).render(

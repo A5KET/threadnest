@@ -1,35 +1,37 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
+import { Attachment } from 'common/types'
 import { Message, MessageService, NewMessage } from './types'
-
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL
-})
 
 
 interface ApiResponse<D> {
     data: D,
     message?: string
     error?: any
-} 
-
-
-function createFormDataFromMessage(newMessage: NewMessage) {
-    const data = new FormData()
-
-    data.append('message', JSON.stringify(newMessage))
-
-    for (const attachment of newMessage.attachments) {
-        data.append('attachments', attachment)
-    }
-
-    return data
 }
 
 
 export class APIMessageService implements MessageService {
+    readonly api: AxiosInstance
+
+    constructor(backendUrl: string) {
+        this.api = axios.create({
+            baseURL: backendUrl
+        })
+    }
+
+    createFormDataFromMessage(newMessage: NewMessage) {
+        const data = new FormData()
+
+        data.append('message', JSON.stringify(newMessage))
+
+        for (const attachment of newMessage.attachments) {
+            data.append('attachments', attachment)
+        }
+
+        return data
+    }
     async getMessages() {
-        const res = await api.get<ApiResponse<Message[]>>('/messages')
+        const res = await this.api.get<ApiResponse<Message[]>>('/messages')
 
         console.log(res.data.data)
 
@@ -37,9 +39,9 @@ export class APIMessageService implements MessageService {
     }
 
     async createMessage(newMessage: NewMessage) {
-        const data = createFormDataFromMessage(newMessage)
+        const data = this.createFormDataFromMessage(newMessage)
 
-        const res = await api.post<ApiResponse<Message>>('/messages', data)
+        const res = await this.api.post<ApiResponse<Message>>('/messages', data)
 
         return res.data.data
     }
@@ -50,10 +52,11 @@ export class APIMessageService implements MessageService {
             parentId: parentMessage.id
         }
 
-        const data = createFormDataFromMessage(message)
+        const data = this.createFormDataFromMessage(message)
 
-        const res = await api.post<ApiResponse<Message>>(`/messages`, data)
+        const res = await this.api.post<ApiResponse<Message>>(`/messages`, data)
 
         return res.data.data
     }
 }
+
