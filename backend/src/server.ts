@@ -12,9 +12,9 @@ export function createServer(
 ) {
     const server = express()
 
-    server.use('/static', express.static(staticService.staticRoot))
-    server.use(express.json())
     server.use(cors())
+    server.use('/static', express.static(staticService.staticRoot, { maxAge: '1y', immutable: true }))
+    server.use(express.json())
     server.use('/messages', getMessagesRoutes(attachmentUpload, staticService), handleError)
     server.use(handleError)
 

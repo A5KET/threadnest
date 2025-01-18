@@ -1,4 +1,5 @@
-import { maxAttachmentImageHeight, maxAttachmentImageWidth, maxAttachmentTextSize } from 'common/constraints'
+import { getAttachmentTypeFromMime } from 'common/attachments'
+import { maxAttachmentImageHeight, maxAttachmentImageWidth, maxTextAttachmentSize } from 'common/constraints'
 import sharp from 'sharp'
 import { z } from 'zod'
 
@@ -16,28 +17,39 @@ export const messageSchema = z.object({
 
 export const attachmentSchema = z
     .custom<Express.Multer.File>()
-    .refine((attachment) => {
-        if (attachment.mimetype === 'text/plain') {
-            return attachment.size <= maxAttachmentTextSize
-        }
-
-        return true
-    }, 'TXT file must be less than or equal to 100 KB.')
     .superRefine(async (attachment, ctx) => {
-        try {
-            const metadata = await sharp(attachment.buffer).metadata()
+        const attachmentType = getAttachmentTypeFromMime(attachment.mimetype)
 
-            if (metadata.width! > maxAttachmentImageWidth || metadata.height! > maxAttachmentImageHeight) {
+        if (attachmentType === 'text') {
+            if (attachment.size > maxTextAttachmentSize) {
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
-                    message: `Image attachment dimensions must be ${maxAttachmentImageWidth}x${maxAttachmentImageHeight} or smaller.`,
+                    message: `TXT file must be less than or equal to ${maxTextAttachmentSize}`,
                     path: ['buffer'],
                 })
             }
-        } catch (error) {
+        } else if (attachmentType === 'image') {
+            try {
+                const metadata = await sharp(attachment.buffer).metadata()
+
+                if (metadata.width! > maxAttachmentImageWidth || metadata.height! > maxAttachmentImageHeight) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: `Image attachment dimensions must be ${maxAttachmentImageWidth}x${maxAttachmentImageHeight} or smaller`,
+                        path: ['buffer'],
+                    })
+                }
+            } catch (error) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Failed to process image for dimension validation',
+                    path: ['buffer'],
+                })
+            }
+        } else {
             ctx.addIssue({
                 code: z.ZodIssueCode.custom,
-                message: 'Failed to process image for dimension validation.',
+                message: 'Unexpected attachment type',
                 path: ['buffer'],
             })
         }
