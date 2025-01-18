@@ -1,6 +1,7 @@
 .preview-footer {
     display: flex;
     margin-top: 15px;
+    margin-bottom: 3em;
 
     & .close-button {
         stroke: white;
@@ -23,4 +24,27 @@
     & .date {
         color: rgb(152, 152, 152);
     }
+}
+
+.loader {
+    animation: spin 1s linear infinite;
+
+    @keyframes & {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+.preview-text {
+    background: white;
+    padding: 3em;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    max-width: 90%;
+    overflow: auto;
 }

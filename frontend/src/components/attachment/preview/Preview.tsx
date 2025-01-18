@@ -1,8 +1,9 @@
 import { AttachmentType } from 'common/attachments'
 import { Attachment } from 'common/types'
+import { useEffect, useState } from 'react'
+import useStaticContext from '../../../hooks/useStaticContext'
 import ImageAttachmentPreview from './Image'
 import TextAttachmentPreview from './Text'
-import useStaticContext from '../../../hooks/useStaticContext'
 
 
 export interface AttachmentPreviewProps {
@@ -13,13 +14,22 @@ export interface AttachmentPreviewProps {
 
 
 export default function AttachmentPreview({ attachment, attachmentType }: AttachmentPreviewProps) {
-    const { getStaticPath } = useStaticContext()
+    const [textContent, setTextContent] = useState<string | null>(null)
+    const { getStaticURL, fetchStaticTextContent } = useStaticContext()
 
-    switch(attachmentType) {
+    useEffect(() => {
+        if (attachmentType === 'text') {
+            fetchStaticTextContent(attachment.path).then(setTextContent)
+        } else {
+            setTextContent(null)
+        }
+    }, [attachment])
+
+    switch (attachmentType) {
         case 'image':
-            return <ImageAttachmentPreview path={getStaticPath(attachment.path)} />
+            return <ImageAttachmentPreview path={getStaticURL(attachment.path)} />
         case 'text':
-            return <TextAttachmentPreview />
+            return (textContent ? <TextAttachmentPreview text={textContent} /> : null)
         default:
             return <></>
     }

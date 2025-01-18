@@ -1,7 +1,12 @@
-export default function TextAttachmentPreview() {
+export interface TextAttachmentPreviewProps {
+    text: string
+}
+
+
+export default function TextAttachmentPreview({ text }: TextAttachmentPreviewProps) {
     return (
-        <div>
-            
+        <div className='preview-text'>
+            {text}
         </div>
     )
 }

@@ -6,6 +6,7 @@ import { StaticProvider } from './components/providers/Static.tsx'
 import { APIMessageService } from './service.ts'
 import './styles/index.css'
 import type { ImportMetaEnv } from './vite-env.d.ts'
+import axios from 'axios'
 
 
 function getEnv<K extends keyof ImportMetaEnv>(key: K): ImportMetaEnv[K] {
@@ -20,12 +21,14 @@ function getEnv<K extends keyof ImportMetaEnv>(key: K): ImportMetaEnv[K] {
 
 
 const messageService = new APIMessageService(getEnv('VITE_BACKEND_URL'))
+const staticApi = axios.create({
+  baseURL: getEnv('VITE_STATIC_URL')
+})
 
-const staticPath = getEnv('VITE_STATIC_URL')
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <StaticProvider staticRoot={staticPath}>
+    <StaticProvider api={staticApi}>
       <ErrorProvider>
         <App messageService={messageService} />
       </ErrorProvider>

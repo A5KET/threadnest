@@ -1,10 +1,21 @@
 import { getAttachmentTypeFromMime } from 'common/attachments'
-import { maxAttachmentImageHeight, maxAttachmentImageWidth, maxAttachmentSize, mimeToAcceptedAttachmentFileExtension } from 'common/constraints'
+import { maxAttachmentImageHeight, maxAttachmentImageWidth, maxAttachmentSize, maxTextAttachmentSize, mimeToAcceptedAttachmentFileExtension } from 'common/constraints'
 import { ErrorCode, FileRejection, useDropzone } from 'react-dropzone'
 
 
 function validateAttachmentFile(file: File) {
     return new Promise((resolve, reject) => {
+        const attachmentType = getAttachmentTypeFromMime(file.type)
+
+        if (attachmentType === 'text') {
+            if (file.size > maxTextAttachmentSize) {
+                reject(new Error('File is too large'))
+            }
+
+            resolve(undefined)
+            return
+        }
+
         const reader = new FileReader()
 
         reader.onload = () => {
@@ -13,7 +24,7 @@ function validateAttachmentFile(file: File) {
                 return
             }
 
-            if (getAttachmentTypeFromMime(file.type) === 'image') {
+            if (attachmentType === 'image') {
                 const img = new Image()
 
                 img.onload = () => {
@@ -45,6 +56,7 @@ function validateAttachmentFile(file: File) {
 
 export default function useAttachmentDropzone(onDrop: (files: File[]) => void, onError: (error: string) => void) {
     const handleDrop = (files: File[], rejections: FileRejection[]) => {
+        console.log(files, rejections)
         if (rejections.length > 0) {
             const error = rejections[0].errors[0]
 

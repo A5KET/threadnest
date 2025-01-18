@@ -1,21 +1,26 @@
+import { AxiosInstance } from 'axios'
 import { createContext, PropsWithChildren, useCallback } from 'react'
 
 export interface StaticContextValue {
-    staticRoot: string
-    getStaticPath: (path: string) => string
+    getStaticURL: (path: string) => string
+    fetchStaticTextContent: (path: string) => Promise<string>
 }
 
 export interface StaticProviderProps extends PropsWithChildren {
-    staticRoot: string
+    api: AxiosInstance
 }
 
 export const StaticContext = createContext<StaticContextValue | null>(null)
 
-export function StaticProvider({ children, staticRoot }: StaticProviderProps) {
-    const getStaticPath = useCallback((path: string) => `${staticRoot}/${path}`, [staticRoot])
+export function StaticProvider({ children, api }: StaticProviderProps) {
+    const getStaticURL = useCallback((path: string) => api.getUri({ url: path }), [api])
+
+    const fetchStaticTextContent = useCallback(async (path: string): Promise<string> => {
+        return (await api(path, { responseType: 'text' })).data
+    }, [api])
 
     return (
-        <StaticContext.Provider value={{ staticRoot, getStaticPath }}>
+        <StaticContext.Provider value={{ getStaticURL, fetchStaticTextContent }}>
             {children}
         </StaticContext.Provider>
     )
