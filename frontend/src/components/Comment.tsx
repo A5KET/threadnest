@@ -2,30 +2,30 @@ import { Reply } from 'lucide-react'
 import { useState } from 'react'
 
 import { Attachment } from 'common/types'
-import { Message, NewMessage } from '../types'
-import { createMessageFromFormData, formatDate } from '../utils'
+import { Comment, NewComment } from '../types'
+import { createCommentFromFormData, formatDate } from '../utils'
 import AttachmentCard from './attachment/AttachmentCard'
-import MessageForm, { MessageFormData } from './form/Form'
+import CommentForm, { CommentFormData } from './form/Form'
 
 
-export interface ThreadMessageProps {
-    message: Message
-    onReply: (parentMessage: Message, replyMessage: NewMessage) => void
+export interface ThreadCommentProps {
+    comment: Comment
+    onReply: (parentComment: Comment, replyComment: NewComment) => void
     onAttachmentClick: (attachment: Attachment) => void
 }
 
-export default function ThreadMessage({ message, onReply, onAttachmentClick }: ThreadMessageProps) {
+export default function ThreadComment({ comment, onReply, onAttachmentClick }: ThreadCommentProps) {
     const [isReply, setIsReply] = useState<boolean>(false)
-    const { date, time } = formatDate(message.createdAt)
+    const { date, time } = formatDate(comment.createdAt)
 
     const handleReplyClick = () => {
         setIsReply(true)
     }
 
-    const handleReplySubmit = (data: MessageFormData) => {
-        const replyMessage = createMessageFromFormData(data)
+    const handleReplySubmit = (data: CommentFormData) => {
+        const replyComment = createCommentFromFormData(data)
 
-        onReply(message, replyMessage)
+        onReply(comment, replyComment)
         setIsReply(false)
     }
 
@@ -34,18 +34,18 @@ export default function ThreadMessage({ message, onReply, onAttachmentClick }: T
     }
 
     return (
-        <div className='message'>
+        <div className='comment'>
             <div className='header'>
-                <span className='username'>{message.author.username}</span>
+                <span className='username'>{comment.author.username}</span>
                 <span className='date'>{`${date} в ${time}`}</span>
                 <Reply onClick={handleReplyClick} />
             </div>
-            <div className='text'>{message.text}</div>
+            <div className='text'>{comment.text}</div>
             {
-                message.attachments
+                comment.attachments
                     ? (
                         <div className='attachments'>
-                            {message.attachments.map(
+                            {comment.attachments.map(
                                 attachment =>
                                     <AttachmentCard
                                         key={attachment.id}
@@ -61,21 +61,21 @@ export default function ThreadMessage({ message, onReply, onAttachmentClick }: T
 
             {
                 isReply
-                    ? <MessageForm onSubmit={handleReplySubmit} onCancel={handleFormCancel} />
+                    ? <CommentForm onSubmit={handleReplySubmit} onCancel={handleFormCancel} />
                     : null
             }
             {
-                message.children
-                    ? message.children.map(childMessage => {
-                        return <ThreadMessage
-                            key={childMessage.id}
-                            message={childMessage}
+                comment.children
+                    ? comment.children.map(childComment => {
+                        return <ThreadComment
+                            key={childComment.id}
+                            comment={childComment}
                             onReply={onReply}
                             onAttachmentClick={onAttachmentClick}
                         />
                     })
                     : (
-                        message.hasChildren
+                        comment.hasChildren
                             ? <p>Show more</p>
                             : null
                     )

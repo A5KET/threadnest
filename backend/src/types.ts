@@ -1,6 +1,6 @@
-import { Message } from 'common/types'
+import { Comment } from 'common/types'
 import { Multer } from 'multer'
-export type { Message }
+export type { Comment }
 
 
 export type Upload = Multer

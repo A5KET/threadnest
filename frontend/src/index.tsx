@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './components/App.tsx'
 import { ErrorProvider } from './components/providers/Error.tsx'
 import { StaticProvider } from './components/providers/Static.tsx'
-import { APIMessageService } from './service.ts'
+import { APICommentService } from './service.ts'
 import './styles/index.css'
 import type { ImportMetaEnv } from './vite-env.d.ts'
 import axios from 'axios'
@@ -20,7 +20,7 @@ function getEnv<K extends keyof ImportMetaEnv>(key: K): ImportMetaEnv[K] {
 }
 
 
-const messageService = new APIMessageService(getEnv('VITE_BACKEND_URL'))
+const commentService = new APICommentService(getEnv('VITE_BACKEND_URL'))
 const staticApi = axios.create({
   baseURL: getEnv('VITE_STATIC_URL')
 })
@@ -30,7 +30,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <StaticProvider api={staticApi}>
       <ErrorProvider>
-        <App messageService={messageService} />
+        <App commentService={commentService} />
       </ErrorProvider>
     </StaticProvider>
   </StrictMode>,

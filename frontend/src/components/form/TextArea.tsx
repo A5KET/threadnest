@@ -17,7 +17,7 @@ export default function FormTextArea({ label, name, value, required = true, onCh
     }
 
     return (
-        <div className='message-form-field text'>
+        <div className='comment-form-field text'>
             <label className='invisible' htmlFor={name}>{label}</label>
             <textarea
                 id={name}

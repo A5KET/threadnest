@@ -1,33 +1,33 @@
-import { Attachment, Author, Message, Prisma, PrismaClient } from '@prisma/client'
+import { Attachment, Author, Comment, Prisma, PrismaClient } from '@prisma/client'
 import { NewAttachment } from 'common/types'
 
 const prisma = new PrismaClient()
 
-export type MessageOrderBy = Prisma.MessageOrderByWithRelationInput
+export type CommentOrderBy = Prisma.CommentOrderByWithRelationInput
 
-type MessageWithChildren = Message & {
+type CommentWithChildren = Comment & {
     author: Author,
     attachments: Attachment[]
-    children?: MessageWithChildren[]
+    children?: CommentWithChildren[]
     hasChildren: boolean
 }
 
-type RecursiveMessageInclude = {
+type RecursiveCommentInclude = {
     include: {
         author: true
-        children: RecursiveMessageInclude | {
+        children: RecursiveCommentInclude | {
             select: {
                 id: true
             }
         },
         attachments: true
     }
-    orderBy: MessageOrderBy
+    orderBy: CommentOrderBy
 }
 
 
-function createRecursiveMessageInclude(depth: number, orderBy: MessageOrderBy) {
-    let includeObject: RecursiveMessageInclude = {
+function createRecursiveCommentInclude(depth: number, orderBy: CommentOrderBy) {
+    let includeObject: RecursiveCommentInclude = {
         include: {
             author: true,
             children: {
@@ -54,14 +54,14 @@ function createRecursiveMessageInclude(depth: number, orderBy: MessageOrderBy) {
     return includeObject.include
 }
 
-const memoizedCreateRecursiveMessageInclude = (() => {
-    const memoized: Record<number, Readonly<ReturnType<typeof createRecursiveMessageInclude>> | undefined> = {}
+const memoizedCreateRecursiveCommentInclude = (() => {
+    const memoized: Record<number, Readonly<ReturnType<typeof createRecursiveCommentInclude>> | undefined> = {}
 
-    return function (depth: number, orderBy: MessageOrderBy) {
+    return function (depth: number, orderBy: CommentOrderBy) {
         const memoizedResult = memoized[depth]
 
         if (!memoizedResult) {
-            const result = createRecursiveMessageInclude(depth, orderBy)
+            const result = createRecursiveCommentInclude(depth, orderBy)
 
             memoized[depth] = Object.freeze(result)
 
@@ -72,27 +72,27 @@ const memoizedCreateRecursiveMessageInclude = (() => {
     }
 })()
 
-function setHasChildrenAndCleanUp(messages: MessageWithChildren[], depth: number, maxDepth: number) {
-    return messages.map((message) => {
-        const hasChildren = message.children !== undefined && message.children.length > 0
-        message.hasChildren = hasChildren
+function setHasChildrenAndCleanUp(comments: CommentWithChildren[], depth: number, maxDepth: number) {
+    return comments.map((comment) => {
+        const hasChildren = comment.children !== undefined && comment.children.length > 0
+        comment.hasChildren = hasChildren
 
         if (depth >= maxDepth) {
-            delete message.children
+            delete comment.children
         }
         else {
-            message.children = setHasChildrenAndCleanUp(message.children!, depth + 1, maxDepth)
+            comment.children = setHasChildrenAndCleanUp(comment.children!, depth + 1, maxDepth)
         }
 
-        return message
+        return comment
     })
 }
 
 
-export async function fetchMessagesByParentId(parentId: number | null, maxDepth: number, orderBy: MessageOrderBy) {
-    let includeObject = memoizedCreateRecursiveMessageInclude(maxDepth, orderBy)
+export async function fetchCommentsByParentId(parentId: number | null, maxDepth: number, orderBy: CommentOrderBy) {
+    let includeObject = memoizedCreateRecursiveCommentInclude(maxDepth, orderBy)
 
-    const messages = await prisma.message.findMany({
+    const comments = await prisma.comment.findMany({
         where: {
             parentId
         },
@@ -100,36 +100,36 @@ export async function fetchMessagesByParentId(parentId: number | null, maxDepth:
         orderBy
     })
 
-    return setHasChildrenAndCleanUp(messages as MessageWithChildren[], 1, maxDepth)
+    return setHasChildrenAndCleanUp(comments as CommentWithChildren[], 1, maxDepth)
 }
 
-export async function fetchMessageById(messageId: number, maxDepth: number, orderBy: MessageOrderBy) {
-    let includeObject = memoizedCreateRecursiveMessageInclude(maxDepth, orderBy)
+export async function fetchCommentById(commentId: number, maxDepth: number, orderBy: CommentOrderBy) {
+    let includeObject = memoizedCreateRecursiveCommentInclude(maxDepth, orderBy)
 
-    const message = await prisma.message.findUnique({
+    const comment = await prisma.comment.findUnique({
         where: {
-            id: messageId
+            id: commentId
         },
         include: includeObject
     })
 
-    if (message === null) {
+    if (comment === null) {
         return null
     }
 
 
-    const result = setHasChildrenAndCleanUp([message as MessageWithChildren], 0, maxDepth)
+    const result = setHasChildrenAndCleanUp([comment as CommentWithChildren], 0, maxDepth)
 
     return result[0]
 }
 
-export async function fetchHeadlineMessages(maxDepth: number, orderBy: MessageOrderBy) {
-    return fetchMessagesByParentId(null, maxDepth, orderBy)
+export async function fetchHeadlineComments(maxDepth: number, orderBy: CommentOrderBy) {
+    return fetchCommentsByParentId(null, maxDepth, orderBy)
 }
 
-export async function createMessage(message: Prisma.MessageUncheckedCreateInput) {
-    const res = await prisma.message.create({
-        data: message,
+export async function createComment(comment: Prisma.CommentUncheckedCreateInput) {
+    const res = await prisma.comment.create({
+        data: comment,
         include: {
             author: true
         }
@@ -141,22 +141,22 @@ export async function createMessage(message: Prisma.MessageUncheckedCreateInput)
     }
 }
 
-export async function checkMessageExists(messageId: number) {
-    return Boolean(await prisma.message.findUnique({
+export async function checkCommentExists(commentId: number) {
+    return Boolean(await prisma.comment.findUnique({
         where: {
-            id: messageId
+            id: commentId
         }
     }))
 }
 
-export async function createMessageWithAuthor(
-    message: Prisma.MessageCreateWithoutAuthorInput,
+export async function createCommentWithAuthor(
+    comment: Prisma.CommentCreateWithoutAuthorInput,
     author: Prisma.AuthorCreateInput,
     attachments: NewAttachment[] = []
 ) {
-    const createdMessage = await prisma.message.create({
+    const createdComment = await prisma.comment.create({
         data: {
-            text: message.text,
+            text: comment.text,
             author: {
                 create: author
             },
@@ -171,7 +171,7 @@ export async function createMessageWithAuthor(
     })
 
     return {
-        ...createdMessage,
+        ...createdComment,
         hasChildren: false
     }
 }

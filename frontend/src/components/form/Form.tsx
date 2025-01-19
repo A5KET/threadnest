@@ -8,26 +8,26 @@ import FormTextArea from './TextArea'
 import '../../styles/form.css'
 import { areFilesEqual } from '../../utils'
 
-export interface MessageFormFieldsData {
+export interface CommentFormFieldsData {
     username: string
     email: string
     homepage: string
     text: string
 }
 
-export interface MessageFormData extends MessageFormFieldsData {
+export interface CommentFormData extends CommentFormFieldsData {
     attachments: File[]
 }
 
-export interface MessageFormProps {
-    onSubmit: (data: MessageFormData) => void
+export interface CommentFormProps {
+    onSubmit: (data: CommentFormData) => void
     onCancel?: () => void
 }
 
-export default function MessageForm({ onSubmit, onCancel = () => { } }: MessageFormProps) {
+export default function CommentForm({ onSubmit, onCancel = () => { } }: CommentFormProps) {
     const [error, setError] = useState<string | null>(null)
     const [isUploadingAttachment, setIsUploadingAttachment] = useState<boolean>(false)
-    const [formData, setFormData] = useState<MessageFormFieldsData>({
+    const [formData, setFormData] = useState<CommentFormFieldsData>({
         username: '',
         email: '',
         homepage: '',
@@ -59,7 +59,7 @@ export default function MessageForm({ onSubmit, onCancel = () => { } }: MessageF
                 data[key as keyof typeof data]
 
                 return data
-            }, { } as MessageFormFieldsData)
+            }, { } as CommentFormFieldsData)
 
         setFormData(newFormData)
         setAttachments([])
@@ -85,7 +85,7 @@ export default function MessageForm({ onSubmit, onCancel = () => { } }: MessageF
         for (const newAttachment of newAttachments) {
             for (const attachment of attachments) {
                 if (areFilesEqual(newAttachment, attachment)) {
-                    setError(`${newAttachment.name} is already attached to the message`)
+                    setError(`${newAttachment.name} is already attached to the comment`)
 
                     return
                 }
@@ -104,7 +104,7 @@ export default function MessageForm({ onSubmit, onCancel = () => { } }: MessageF
     }
 
     return (
-        <form onSubmit={handleFormSubmit} className='message-form' ref={formRef}>
+        <form onSubmit={handleFormSubmit} className='comment-form' ref={formRef}>
             <FormInput name='username' type='text' label='Username' value={formData['username']} onChange={handleChange} />
             <FormInput name='email' type='email' label='Email' value={formData['email']} onChange={handleChange} />
             <FormInput name='homepage' type='url' label='Home Page' value={formData['homepage']} onChange={handleChange} required={false} />

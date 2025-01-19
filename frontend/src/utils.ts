@@ -1,5 +1,5 @@
-import { MessageFormData } from './components/form/Form'
-import { NewMessage } from './types'
+import { CommentFormData } from './components/form/Form'
+import { NewComment } from './types'
 
 export function formatDate(date: Date | string) {
     return {
@@ -8,7 +8,7 @@ export function formatDate(date: Date | string) {
     }
 }
 
-export function createMessageFromFormData(data: MessageFormData): NewMessage {
+export function createCommentFromFormData(data: CommentFormData): NewComment {
     return {
         text: data.text,
         author: {

@@ -9,7 +9,7 @@ export const authorSchema = z.object({
     homepage: z.string().url().optional()
 })
 
-export const messageSchema = z.object({
+export const commentSchema = z.object({
     text: z.string(),
     parentId: z.number().optional(),
     author: authorSchema
@@ -57,6 +57,6 @@ export const attachmentSchema = z
 
 export const attachmentsSchema = z.array(attachmentSchema)
 
-export const newMessageSchema = z.object({
-    message: messageSchema,
+export const newCommentSchema = z.object({
+    comment: commentSchema,
 })

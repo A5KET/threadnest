@@ -16,10 +16,10 @@ export interface User {
     homepage: string | null
 }
 
-export interface Message {
+export interface Comment {
     id: number
     parentId: number | null
-    children?: Message[]
+    children?: Comment[]
     attachments: Attachment[]
     hasChildren: boolean
     author: User
@@ -33,7 +33,7 @@ export interface NewAuthor {
     homepage?: string
 }
 
-export interface MessageDto {
+export interface CommentDto {
     parentId?: number
     text: string
     author: NewAuthor

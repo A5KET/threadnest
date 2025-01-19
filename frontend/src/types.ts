@@ -1,14 +1,14 @@
-import { Message, MessageDto, User } from 'common/types'
+import { Comment, CommentDto, User } from 'common/types'
 
-export type { Message, User }
+export type { Comment, User }
 
 
-export interface MessageService {
-    getMessages(): Promise<Message[]>
-    createMessage(message: NewMessage): Promise<Message>
-    createReplyMessage(parentMessage: Message, replyMessage: NewMessage): Promise<Message>
+export interface CommentService {
+    getComments(): Promise<Comment[]>
+    createComment(comment: NewComment): Promise<Comment>
+    createReplyComment(parentComment: Comment, replyComment: NewComment): Promise<Comment>
 }
 
-export interface NewMessage extends MessageDto {
+export interface NewComment extends CommentDto {
     attachments: File[]
 }

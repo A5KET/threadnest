@@ -1,4 +1,4 @@
-.message-form {
+.comment-form {
     &>.bottom-bar {
         display: flex;
 
@@ -21,7 +21,7 @@
     }
 }
 
-.message-form-field {
+.comment-form-field {
     &>input, &>textarea {
         width: 100%;
     }

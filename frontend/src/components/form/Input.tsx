@@ -10,7 +10,7 @@ interface FormInputProps extends FormElementProps {
 
 export default function FormInput({ type, label, name, value, minLength, required = true, onChange }: FormInputProps) {
     return (
-        <div className={`message-form-field ${name}`}>
+        <div className={`comment-form-field ${name}`}>
             <label className='invisible' htmlFor={name}>{label}</label>
             <input
                 type={type}

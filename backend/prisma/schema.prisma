@@ -13,15 +13,15 @@ model Author {
   username  String
   email     String
   homepage  String?
-  Message   Message?
+  Comment   Comment?
   createdAt DateTime @default(now())
 }
 
-model Message {
+model Comment {
   id          Int          @id @default(autoincrement())
   author      Author       @relation(fields: [authorId], references: [id])
-  parent      Message?     @relation("MessageParent", fields: [parentId], references: [id])
-  children    Message[]    @relation("MessageParent")
+  parent      Comment?     @relation("CommentParent", fields: [parentId], references: [id])
+  children    Comment[]    @relation("CommentParent")
   attachments Attachment[]
   text        String
   parentId    Int?
@@ -35,6 +35,6 @@ model Attachment {
   mimetype  String
   path      String   @unique
   createdAt DateTime @default(now())
-  Message   Message? @relation(fields: [messageId], references: [id])
-  messageId Int?
+  Comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
 }

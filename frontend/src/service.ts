@@ -1,16 +1,14 @@
 import axios, { AxiosInstance } from 'axios'
-import { Attachment } from 'common/types'
-import { Message, MessageService, NewMessage } from './types'
+import { Comment, CommentService, NewComment } from './types'
 
 
 interface ApiResponse<D> {
     data: D,
-    message?: string
+    comment?: string
     error?: any
 }
 
-
-export class APIMessageService implements MessageService {
+export class APICommentService implements CommentService {
     readonly api: AxiosInstance
 
     constructor(backendUrl: string) {
@@ -19,44 +17,43 @@ export class APIMessageService implements MessageService {
         })
     }
 
-    createFormDataFromMessage(newMessage: NewMessage) {
+    createFormDataFromComment(newComment: NewComment) {
         const data = new FormData()
 
-        data.append('message', JSON.stringify(newMessage))
+        data.append('comment', JSON.stringify(newComment))
 
-        for (const attachment of newMessage.attachments) {
+        for (const attachment of newComment.attachments) {
             data.append('attachments', attachment)
         }
 
         return data
     }
-    async getMessages() {
-        const res = await this.api.get<ApiResponse<Message[]>>('/messages')
+    async getComments() {
+        const res = await this.api.get<ApiResponse<Comment[]>>('/comments')
 
         console.log(res.data.data)
 
         return res.data.data
     }
 
-    async createMessage(newMessage: NewMessage) {
-        const data = this.createFormDataFromMessage(newMessage)
+    async createComment(newComment: NewComment) {
+        const data = this.createFormDataFromComment(newComment)
 
-        const res = await this.api.post<ApiResponse<Message>>('/messages', data)
+        const res = await this.api.post<ApiResponse<Comment>>('/comments', data)
 
         return res.data.data
     }
 
-    async createReplyMessage(parentMessage: Message, replyMessage: NewMessage) {
-        const message = {
-            ...replyMessage,
-            parentId: parentMessage.id
+    async createReplyComment(parentComment: Comment, replyComment: NewComment) {
+        const comment = {
+            ...replyComment,
+            parentId: parentComment.id
         }
 
-        const data = this.createFormDataFromMessage(message)
+        const data = this.createFormDataFromComment(comment)
 
-        const res = await this.api.post<ApiResponse<Message>>(`/messages`, data)
+        const res = await this.api.post<ApiResponse<Comment>>(`/comments`, data)
 
         return res.data.data
     }
 }
-
